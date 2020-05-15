@@ -27,7 +27,9 @@ const kittyPrompts = {
 
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties
+      .filter(kitty => kitty.color === 'orange')
+      .map(orangeKitty => orangeKitty.name);
     return result;
 
     // Annotation:
@@ -37,7 +39,7 @@ const kittyPrompts = {
   sortByAge() {
     // Sort the kitties by their age
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.sort((a, b) => b.age - a.age);
     return result;
 
     // Annotation:
@@ -58,7 +60,10 @@ const kittyPrompts = {
     // },
     // ...etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.map(kitty => {
+      kitty.age += 2;
+      return kitty;
+    });
     return result;
   }
 };
@@ -90,7 +95,16 @@ const clubPrompts = {
     //   ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = clubs.reduce((acc, club) => {
+      club.members.forEach(member => {
+        if (!acc[member]) {
+          acc[member] = []
+        }
+        acc[member].push(club.club)
+      })
+      return acc
+    }, {});
+
     return result;
 
     // Annotation:
@@ -126,7 +140,13 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = mods.map(mod => {
+      return {
+        mod: mod.mod,
+        studentsPerInstructor: mod.students / mod.instructors
+      }
+    });
+
     return result;
 
     // Annotation:
@@ -385,7 +405,7 @@ const weatherPrompts = {
     //   temperature: { high: 49, low: 38 }
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.sort((a, b) => a.humidity - b.humidity)[0];
     return result;
 
     // Annotation:
@@ -412,7 +432,13 @@ const nationalParksPrompts = {
     //   parksVisited: ["Rocky Mountain", "Acadia", "Zion"]
     //}
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = nationalParks.reduce((acc, park) => {
+      park.visited ? acc.parksVisited.push(park.name) : acc.parksToVisit.push(park.name)
+      return acc
+    }, {
+      parksToVisit: [],
+      parksVisited: []
+    })
     return result;
 
     // Annotation:
@@ -429,8 +455,11 @@ const nationalParksPrompts = {
     // { Florida: 'Everglades' } ]
 
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
-    return result;
+    // const result = nationalParks.map(park =>  return {
+    //   [park.location]: park.name
+    // }
+    // )
+    // return result;
 
     // Annotation:
     // Write your annotation here as a comment
@@ -452,7 +481,14 @@ const nationalParksPrompts = {
     //   'backpacking',
     //   'rock climbing' ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = nationalParks.reduce((acc, park) => {
+      park.activities.forEach(activity => {
+        if (!acc.includes(activity)) {
+          acc.push(activity)
+        }
+      })
+      return acc
+    }, [])
     return result;
 
     // Annotation:
@@ -591,7 +627,18 @@ const turingPrompts = {
     //     Will: [1, 2, 3, 4]
     //   }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = instructors.reduce((acc, instructor) => {
+      const arr = [];
+      instructor.teaches.forEach(topic => {
+        cohorts.forEach(cohort => {
+          if (cohort.curriculum.includes(topic) && !arr.includes(cohort.module)) {
+            arr.push(cohort.module)
+          }
+        });
+      });
+      acc[instructor.name] = arr.sort((a, b) => a - b);
+      return acc;
+    }, {})
     return result;
 
     // Annotation:
