@@ -773,7 +773,26 @@ const bossPrompts = {
     //   { bossName: 'Scar', sidekickLoyalty: 16 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+  const result = sidekicks.reduce((acc, sidekick) => {
+    let answer = {};
+    let finder = acc.find(name => name.bossName === sidekick.boss) 
+    if (!finder) {
+      answer.bossName = sidekick.boss
+      answer.sidekickLoyalty = sidekick.loyaltyToBoss
+      acc.push(answer)
+    } else {
+      acc.map(obj => {
+        if (obj.bossName === sidekick.boss) {
+          obj.sidekickLoyalty += sidekick.loyaltyToBoss
+        }
+        return obj
+      })
+    }
+    return acc
+  }, [])
+    // return arr of obj that has iterate over sidekicks
+    // key bossName: (singular key)
+    // key sidekickLoyalty: acc of sidekicks loyaltyToBoss
     return result;
 
     // Annotation:
@@ -814,8 +833,17 @@ const astronomyPrompts = {
     //     lightYearsFromEarth: 640,
     //     color: 'red' }
     // ]
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let keys = Object.keys(constellations)
+    const result = stars.reduce((acc, star) => {
+      keys.forEach(key => {
+        constellations[key].stars.forEach(item => {
+          if (item === star.name) {
+            acc.push(star)
+          }
+        })
+      })
+      return acc
+    }, [])
     return result;
 
     // Annotation:
@@ -833,7 +861,13 @@ const astronomyPrompts = {
     //   red: [{obj}]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = stars.reduce((acc, star) => {
+      if (!acc[star.color]) {
+        acc[star.color] = []
+      }
+      acc[star.color].push(star)
+      return acc
+    }, {})
     return result;
 
     // Annotation:
@@ -855,9 +889,14 @@ const astronomyPrompts = {
     //    "The Little Dipper" ]
 
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
-    return result;
-
+    const result = stars.filter(star => {
+      if (star.constellation !== '') {
+        return star.constellation
+      } 
+    })
+    return result
+    .sort((a, b) => a.visualMagnitude > b.visualMagnitude ? 1 : -1)
+    .map(star => star.constellation)
     // Annotation:
     // Write your annotation here as a comment
   }
@@ -885,8 +924,15 @@ const ultimaPrompts = {
 
     // Return the sum of the amount of damage for all the weapons that our characters can use
     // Answer => 113
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let keys = Object.keys(weapons)
+    const result = keys.reduce((acc, key) => {
+      characters.forEach(character => {
+        if (character.weapons.includes(key)) {
+          acc += weapons[key].damage
+        }
+      }) 
+      return acc
+    }, 0)
     return result;
 
     // Annotation:
@@ -897,12 +943,28 @@ const ultimaPrompts = {
 
     // Return the sum damage and total range for each character as an object.
     // ex: [ { Avatar: { damage: 27, range: 24 }, { Iolo: {...}, ...}
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = characters.reduce((acc, character) => {
+      let newObj = {}
+      let nestedObj = character.weapons.reduce((acc, weapon) => {
+        acc.damage += weapons[weapon].damage
+        acc.range += weapons[weapon].range
+        return acc 
+      }, { damage: 0, range: 0})
+      newObj[character.name] = nestedObj
+      acc.push(newObj)
+      return acc
+    }, [])
     return result;
 
     // Annotation:
     // Write your annotation here as a comment
+    // reduce over chars 
+    // create a new obj
+    // reduce over character.weapons 
+    // edit acc to look like nested obj
+    // use weapon bracket to access weapons values and += over them
+    // set new obj to character.name + assing it its nested obj
+    // push new obj into acc
   },
 };
 
