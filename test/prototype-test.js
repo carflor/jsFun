@@ -537,7 +537,7 @@ describe("PROTOTYPES", () => {
     it("totalDamage", () => {
       const e = ultimaPrompts.totalDamage();
       expect(e).to.deep.equal(113)
-    }), it.only("charactersByTotal", () => {
+    }), it("charactersByTotal", () => {
       const e = ultimaPrompts.charactersByTotal();
       expect(e).to.deep.equal([{
         Avatar: {
@@ -588,7 +588,7 @@ describe("PROTOTYPES", () => {
           'Jurassic World: Fallen Kingdom': 59
         }
       })
-    }), it("uncastActors", () => {
+    }), it.only("uncastActors", () => {
       const e = dinosaurPrompts.uncastActors();
       expect(e).to.deep.equal([{
         name: 'Justin Duncan',

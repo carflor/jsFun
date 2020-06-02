@@ -393,16 +393,20 @@ const bookPrompts = {
   },
   getNewBooks() {
     // return an array of objects containing all books that were
-    // published in the 90's and 00's. Inlucde the title and the year Eg:
+    // published in the 90's and 00's. Include the title and the year Eg:
 
     // [{ title: 'Harry Potter and the Sorcerer\'s Stone', year: 1997 },
     //  { title: 'Life of Pi', year: 2001 },
     //  { title: 'The Curious Incident of the Dog in the Night-Time', year: 2003 }]
 
-    // const result = books.reduce((acc, book) => {
-
-    // }, [])
-    // return result;
+    const result = books.filter(book => book.published >= 1990)
+      .map(book => {
+        return {
+          title: book.title,
+          year: book.published
+        }
+      })
+    return result;
 
     // Annotation:
     // Write your annotation here as a comment
@@ -424,7 +428,9 @@ const weatherPrompts = {
     // return an array of all the average temperatures. Eg:
     // [ 40, 40, 44.5, 43.5, 57, 35, 65.5, 62, 14, 46.5 ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.map(location => {
+      return (location.temperature.high + location.temperature.low) / 2
+    })
     return result;
 
     // Annotation:
@@ -438,7 +444,11 @@ const weatherPrompts = {
     // 'New Orleans, Louisiana is sunny.',
     // 'Raleigh, North Carolina is mostly sunny.' ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.reduce((acc, location) => {
+      if (location.type.includes('sunny')) {
+        acc.push(`${location.location} is ${location.type}`)
+      }
+    }, [])
     return result;
 
     // Annotation:
@@ -997,7 +1007,15 @@ const dinosaurPrompts = {
     //   'Jurassic World: Fallen Kingdom': 18
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = movies.reduce((acc, movie) => {
+      acc[movie.title] = 0;
+      movie.dinos.forEach(dino => {
+        if (dinosaurs[dino].isAwesome) {
+          acc[movie.title]++
+        }
+      }) 
+      return acc
+    }, {})
     return result;
 
     // Annotation:
@@ -1030,7 +1048,18 @@ const dinosaurPrompts = {
       }
     */
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = movies.reduce((acc, movie) => {
+      if (!acc[movie.director]) {
+        acc[movie.director] = {}
+      }
+      let avgAge = movie.cast.reduce((ages, person) => {
+        let age = movie.yearReleased - humans[person].yearBorn
+        ages += age
+        return ages
+      }, 0)/movie.cast.length
+      acc[movie.director][movie.title] = Math.floor(avgAge)
+      return acc
+    }, {})
     return result;
 
     // Annotation:
@@ -1063,7 +1092,26 @@ const dinosaurPrompts = {
       }]
     */
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let keys = Object.keys(humans)
+    const result = keys.reduce((acc, key) => {
+      let allCast = []
+      movies.forEach(movie => {
+        movie.cast.forEach(member => {
+          if (!allCast.includes(member)) {
+            allCast.push(member)
+          }
+        })
+      })
+      if (!allCast.includes(key)) {
+        let newObj =  {
+          name: key,
+          nationality: humans[key].nationality,
+          imdbStarMeterRating: humans[key].imdbStarMeterRating
+        }
+        acc.push(newObj)
+      }
+      return acc
+    }, []).sort((a, b) => a.nationality > b.nationality ? 1 : -1)
     return result;
 
     // Annotation:
