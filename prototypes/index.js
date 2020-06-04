@@ -667,9 +667,18 @@ const turingPrompts = {
     //  { name: 'Robbie', studentCount: 18 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
-    return result;
-
+    const result = instructors.reduce((acc, instructor) => {
+      let newObj = {}
+      newObj.name = instructor.name
+      cohorts.forEach(cohort => {
+        if (instructor.module === cohort.module) {
+          newObj.studentCount = cohort.studentCount
+        }
+      })
+      acc.push(newObj)
+      return acc
+    }, [])
+    return result
     // Annotation:
     // Write your annotation here as a comment
   },
