@@ -1133,12 +1133,27 @@ const dinosaurPrompts = {
       { name: 'Chris Pratt', ages: [ 36, 39 ] },
       { name: 'Bryce Dallas Howard', ages: [ 34, 37 ] } ]
     */
+  
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+   const result = movies.reduce((arr, movie) => {
+     movie.cast.forEach(member => {
+        let actorObj = {
+          name: '',
+          ages: []
+        }
+        let finder = arr.find(obj => obj.name === member)
+        if (!finder) {
+            actorObj.name = member
+            arr.push(actorObj)
+        } 
+        arr.forEach(actor => {
+          if(actor.name === member)
+          actor.ages.push(movie.yearReleased - humans[actor.name].yearBorn)
+        })
+      })
+      return arr
+    }, [])
     return result;
-
-    // Annotation:
-    // Write your annotation here as a comment
   }
 };
 
